@@ -40,9 +40,18 @@ has_ctcss=false # If ctcss should be removed
 enable=true
 output_directory=output # Directory to export audio files
 ```
+#### How to install
+
+There are many ways to set up an Python environment, here is a suggestion:
+```bash
+$ python -m venv .venv
+$ source ./venv/bin/activate
+$ python -m pip install -r requirements.txt
+```
+
 #### How to launch
 
-Then call the tool as a python module, passing the configuration file path.
+In the root directoy of the project, call the tool as a python module, passing the configuration file path.
 
 ```bash
 $ python -m frequency_listener -c frequency_listener.ini
