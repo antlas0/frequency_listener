@@ -15,7 +15,7 @@ This small tool emerges from different needs:
 ## Prerequisites
 An [RTLSDR](https://en.wikipedia.org/wiki/List_of_software-defined_radios) USB dongle.
 
-## How to launch
+## How to use
 #### Configuration
 
 Edit the configuration file `frequency_listener.ini` accordingly.
