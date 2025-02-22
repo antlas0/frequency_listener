@@ -1,0 +1,43 @@
+# frequency_listener
+This tool is able to record IQs and perform FM demodulation and save the resulting audio to disk.
+
+> [!WARNING]  
+> Please refer to your juridiction to know if you are allowed to record, save and potentially share IQ or demodulated data.
+
+Be able to listen to a frequency and record activity on disk. This is a WIP software
+
+## Prerequisites
+An [RTLSDR](https://en.wikipedia.org/wiki/List_of_software-defined_radios) USB dongle.
+
+## How to launch
+#### Configuration
+
+Edit the configuration file `frequency_listener.ini` accordingly.
+```ini
+[listener]
+duration_s=15 # How long we want to listen
+
+[device_configuration]
+center_frequency=105100000 # On which frequency we want to listen
+sample_rate=1200000 # Sample rate
+frequency_correction_ppm=1 # frequency offset in ppm -- unique for each device
+
+[fm_demodulator_configuration]
+enable=true
+snr_db=5 # Filter sample by SNR. If computed SNR is under this threshold, sample is discarded and not demodulated
+bandwidth=wide # Wide or Narrow band demodulation
+max_chunk_size_b=3500000 # If size in bytes is reached, export
+max_delay_s=300 # If samples are accumulated until this time window, export
+has_ctcss=false # If ctcss should be removed
+
+[exporter_configuration]
+enable=true
+output_directory=output # Directory to export audio files
+```
+#### How to launch
+
+Then call the tool as a python module, passing the configuration file path.
+
+```bash
+$ python -m frequency_listener -c frequency_listener.ini
+```
