@@ -4,8 +4,6 @@ This tool is able to record IQs and perform FM demodulation and save the resulti
 > [!WARNING]  
 > Please refer to your juridiction to know if you are allowed to record, save and potentially share IQ or demodulated data.
 
-Be able to listen to a frequency and record activity on disk. This is a WIP software
-
 ## Prerequisites
 An [RTLSDR](https://en.wikipedia.org/wiki/List_of_software-defined_radios) USB dongle.
 
