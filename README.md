@@ -2,14 +2,14 @@
 This tool is able to record IQs and perform FM demodulation and save the resulting audio to disk. IQ data is saved as Python `pickle` data, Audio is saved as Waveform Audio File Format `.wav`.
 
 
-> [!IMPORTANT]  
-> Please refer to your juridiction to know if you are allowed to record, save and potentially share IQ or demodulated data.
-
 ## Details
 This small tool emerges from different needs:
 * Dive into IQ and demodulation
 * Record my RF tests
 * Detect RF activity and be notified about it
+
+> [!IMPORTANT]  
+> Please refer to your juridiction to know if you are allowed to record, save and potentially share IQ or demodulated data.
 
 
 ## Prerequisites
