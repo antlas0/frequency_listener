@@ -20,14 +20,14 @@ class IQConfiguration:
 
 @dataclass
 class DeviceConfiguration:
-    center_frequency: int
+    center_frequency: float
     virtual: bool=False
     device_index: int=0
     sample_rate: int=2.4e6
     gain : Union[str, int]="auto"
     frequency_correction_ppm: float=20.0
     read_chunk_size: int=4096
-    frequency_offset: int=0
+    frequency_offset: float=0.0
     bandwidth: BandwidthSize=BandwidthSize.WIDE
     iq: IQConfiguration = IQConfiguration()
 
