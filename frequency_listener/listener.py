@@ -10,6 +10,8 @@ from .fm_demodulator import FMDemodulator
 from .demodulator import Demodulator
 from .file_exporter import FileExporter
 from .device import Device
+from .sdr_device import SDRDevice
+from .virtual_device import VirtualDevice
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +24,8 @@ class Listener(threading.Thread):
                     configuration:ListenerConfiguration):
         self._configuration:ListenerConfiguration = configuration
         self._demodulator_params:DemodulatorConfiguration = demodulator_params
-        self._device:Device = Device(device_params)
+        self._device:Device = None
+        self._device_params:DeviceConfiguration = device_params
         self._exporter = None
         self._demodulator:Demodulator = None
         self._exporter_params = exporter_params
@@ -31,7 +34,12 @@ class Listener(threading.Thread):
         self._timer:threading.Timer = None
 
     def setup(self) -> bool:
+        if self._device_params.virtual:
+            self._device = VirtualDevice(self._device_params)
+        else:
+            self._device = SDRDevice(self._device_params)
         self._device.set_output_queue(self._signal_queue)
+
         if self._demodulator_params.demodulation_type == DemodulationType.FM:
             self._demodulator:Demodulator = FMDemodulator(self._demodulator_params)
             self._demodulator.set_input_queue(self._signal_queue)

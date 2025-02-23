@@ -33,11 +33,12 @@ if __name__ == "__main__":
         bw = BandwidthSize.BROADCAST
   
     iqc = IQConfiguration()
+    iqc.output_dir= config["iq"].get("output_dir", "output")
     if config["iq"].get("enable", "false") == "true":
         iqc.record = True
-        iqc.output_dir= config["iq"].get("output_dir", "output")
 
     dc = DeviceConfiguration(
+        virtual=bool(config["device_configuration"].get("virtual", "false") == "true"),
         center_frequency=int(config["device_configuration"].get("center_frequency")),
         sample_rate=int(config["device_configuration"].get("sample_rate", 1200000)),
         frequency_correction_ppm=float(config["device_configuration"].get("frequency_correction_ppm", 1)),

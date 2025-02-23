@@ -114,13 +114,10 @@ class FMDemodulator(Demodulator):
         """
         Demodulate FM (NBFM) with proper filtering, decimation.
         """
-        fc1 = np.exp(-1.0j * 2.0 * np.pi * 0 / sample_rate * np.arange(len(x1)))
-        x2 = x1 * fc1
-
         audio_gain:int = 10000
 
-        dec_rate = int(4)
-        new_fs:int = int(sample_rate/4)
+        dec_rate = int(5)
+        new_fs:int = int(sample_rate/dec_rate)
         x3 = signal.decimate(x1, dec_rate, zero_phase=True)
 
         ### FM Demodulation (Polar Discriminator)

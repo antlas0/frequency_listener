@@ -21,6 +21,7 @@ class IQConfiguration:
 @dataclass
 class DeviceConfiguration:
     center_frequency: int
+    virtual: bool=False
     device_index: int=0
     sample_rate: int=2.4e6
     gain : Union[str, int]="auto"
