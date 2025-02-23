@@ -39,11 +39,11 @@ if __name__ == "__main__":
 
     dc = DeviceConfiguration(
         virtual=bool(config["device_configuration"].get("virtual", "false") == "true"),
-        center_frequency=int(config["device_configuration"].get("center_frequency")),
+        center_frequency=float(config["device_configuration"].get("center_frequency")),
         sample_rate=int(config["device_configuration"].get("sample_rate", 1200000)),
         frequency_correction_ppm=float(config["device_configuration"].get("frequency_correction_ppm", 1)),
         read_chunk_size=int(config["device_configuration"].get("read_chunk_size", 2097152)),
-        frequency_offset=int(config["device_configuration"].get("frequency_offset", 0)),
+        frequency_offset=float(config["device_configuration"].get("frequency_offset", 0.0)),
         bandwidth=bw,
         iq=iqc,
     )
