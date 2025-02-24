@@ -40,7 +40,7 @@ class DemodulatorConfiguration:
 class FMDemodulatorConfiguration(DemodulatorConfiguration):
     max_chunk_size_b: int=350000
     max_delay_s: int=300
-    has_ctcss: bool=False
+    remove_ctcss: bool=False
 
 @dataclass
 class ListenerConfiguration:

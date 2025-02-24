@@ -56,7 +56,7 @@ if __name__ == "__main__":
         demodulation_type=bd,
         max_delay_s=max_delay_s,
         max_chunk_size_b=int(config["fm_demodulator_configuration"].get("max_chunk_size_b", 50000)),
-        has_ctcss=bool(config["fm_demodulator_configuration"].get("has_ctcss", "false").lower()=="true"),
+        remove_ctcss=bool(config["fm_demodulator_configuration"].get("remove_ctcss", "false").lower()=="true"),
     )
 
     sc = FileExporterConfiguration(

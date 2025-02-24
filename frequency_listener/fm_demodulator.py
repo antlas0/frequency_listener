@@ -91,7 +91,7 @@ class FMDemodulator(Demodulator):
         y4 = x3[1:] * np.conj(x3[:-1])
         x4 = np.angle(y4)
 
-        if self._configuration.has_ctcss:
+        if self._configuration.remove_ctcss:
             x4 = self._remove_ctcss(x4, new_fs)
 
         tau:float = 75e-6  # De-emphasis time constant (75µs for US, 50µs for EU)
@@ -124,7 +124,7 @@ class FMDemodulator(Demodulator):
         y4 = x3[1:] * np.conj(x3[:-1])
         x4 = np.angle(y4)
 
-        if self._configuration.has_ctcss:
+        if self._configuration.remove_ctcss:
             x4 = self._remove_ctcss(x4, new_fs)
 
         # Find a suitable decimation rate to get an audio rate of ~44-48 kHz
