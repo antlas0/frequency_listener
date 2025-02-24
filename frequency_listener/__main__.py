@@ -9,7 +9,7 @@ from .configuration import *
 import logging
 import argparse
 import configparser
-logging.basicConfig(format='[%(asctime)s][%(name)-12s][%(levelname)-7s] %(message)s',
+logging.basicConfig(format='[%(asctime)s][%(name)-35s][%(levelname)-7s] %(message)s',
                     datefmt='%y-%m-%d %H:%M:%S%z')
 logging.getLogger().setLevel(logging.INFO)
 
