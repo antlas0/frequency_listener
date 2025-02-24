@@ -9,7 +9,8 @@ from .configuration import *
 import logging
 import argparse
 import configparser
-logging.basicConfig()
+logging.basicConfig(format='[%(asctime)s][%(name)-12s][%(levelname)-7s] %(message)s',
+                    datefmt='%y-%m-%d %H:%M:%S%z')
 logging.getLogger().setLevel(logging.INFO)
 
 if __name__ == "__main__":
