@@ -19,8 +19,5 @@ class Exporter(LFThread):
         logger.info("Exporter set up.")
         return True
 
-    def demodulate(self) -> None:
-        pass
-
     def quit(self) -> bool:
         return True
