@@ -12,10 +12,10 @@ from .configuration import ExporterConfiguration
 
 logger = logging.getLogger(__name__)
 
-class FileExporter(Exporter):
+class WavExporter(Exporter):
     """Manage data"""
     def __init__(self, configuration:ExporterConfiguration) -> None:
-        super(FileExporter, self).__init__(configuration)
+        super(WavExporter, self).__init__(configuration)
         self._max_queue_timeout_s = 1
 
     def setup(self) -> bool:

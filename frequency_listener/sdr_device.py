@@ -4,7 +4,6 @@ import os
 import logging
 import rtlsdr
 import numpy as np
-import pickle
 from typing import Optional
 from datetime import datetime
 from .configuration import DeviceConfiguration
@@ -18,7 +17,6 @@ class SDRDevice(Device):
     def __init__(self, configuration:DeviceConfiguration):
         super().__init__(configuration)
         self.sdr:Optional[rtlsdr.rtlsdraio.RtlSdrAio] = None
-        self._iq_record:list = []
 
     def setup(self) -> bool:
         """Setup the device"""
@@ -41,11 +39,6 @@ class SDRDevice(Device):
                 self.sdr.freq_correction = int(self._configuration.center_frequency * self._configuration.frequency_correction_ppm /1e6)
             logger.info(f"{self.sdr}")
 
-            if self._configuration.iq.record:
-                try:
-                    os.mkdir(self._configuration.iq.output_dir)
-                except FileExistsError:
-                    pass
         finally:
             pass
         return res
@@ -54,23 +47,6 @@ class SDRDevice(Device):
         """Teardown"""
         logger.info("Closing SDR device")
         return self.teardown()
-
-    def _iq_save(self, data:SignalStruct) -> bool:
-        res:bool = False
-        date = datetime.now().strftime("%Y-%m-%d__%H_%M_%S")
-        filepath: str = os.path.join(
-                self._configuration.iq.output_dir,
-                f"iq_{data.metadata.frequency}_{data.sample_rate}_{date}.pkl"
-            )
-        try:
-            with open(filepath, "wb") as file:
-                pickle.dump(data.samples, file=file)
-        except Exception as e:
-            logger.error(f"Could not save IQ samples: {e}")
-        else:
-            logger.info(f"Exported IQs to file {filepath}")
-            res = True
-        return res
 
     def run(self) -> None:
         logger.info(f"Running SDR device")
@@ -88,6 +64,3 @@ class SDRDevice(Device):
                 )
             )
             self.publish(data)
-
-            if self._configuration.iq.record:
-                self._iq_save(data)

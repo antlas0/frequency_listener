@@ -4,11 +4,12 @@ import logging
 
 import threading
 from queue import Queue
-from .configuration import DeviceConfiguration, DemodulatorConfiguration, ListenerConfiguration, ExporterConfiguration
+from .configuration import DeviceConfiguration, DemodulatorConfiguration, ListenerConfiguration, ExporterConfiguration, FileExporterConfiguration
 from .resources import DemodulationType
 from .fm_demodulator import FMDemodulator
 from .demodulator import Demodulator
-from .file_exporter import FileExporter
+from .wav_exporter import WavExporter
+from .iq_exporter import IQExporter
 from .device import Device
 from .sdr_device import SDRDevice
 from .virtual_device import VirtualDevice
@@ -29,30 +30,37 @@ class Listener(threading.Thread):
         self._exporter = None
         self._demodulator:Demodulator = None
         self._exporter_params = exporter_params
-        self._signal_queue:Queue = Queue(maxsize=512)
+        self._device_queue:Queue = Queue(maxsize=512)
+        self._iq_queue:Queue = Queue(maxsize=512)
         self._audio_queue:Queue = Queue(maxsize=512)
         self._timer:threading.Timer = None
+        self._iq_recorder:IQExporter = None
 
     def setup(self) -> bool:
         if self._device_params.virtual:
             self._device = VirtualDevice(self._device_params)
         else:
             self._device = SDRDevice(self._device_params)
-        self._device.set_output_queue(self._signal_queue)
+        self._device.set_output_queue(self._device_queue)
+        if self._device_params.iq.record:
+            self._iq_recorder = IQExporter(FileExporterConfiguration(output_directory=self._device_params.iq.output_dir))
+            self._device.set_output_queue(self._iq_queue)
+            self._iq_recorder.set_input_queue(self._iq_queue)
 
         if self._demodulator_params.demodulation_type == DemodulationType.FM:
             self._demodulator:Demodulator = FMDemodulator(self._demodulator_params)
-            self._demodulator.set_input_queue(self._signal_queue)
+            self._demodulator.set_input_queue(self._device_queue)
             self._demodulator.set_output_queue(self._audio_queue)
 
         if self._configuration.export is True:
-            self._exporter = FileExporter(self._exporter_params)
+            self._exporter = WavExporter(self._exporter_params)
             self._exporter.set_input_queue(self._audio_queue)
 
         self._timer = threading.Timer(self._configuration.duration_s, self.teardown)
         logger.info(f"Listening during {self._configuration.duration_s} seconds.")
 
         self._device.setup()
+        self._iq_recorder.setup()
 
         if self._demodulator_params.demodulation_type == DemodulationType.FM:
             self._demodulator.setup()
@@ -68,6 +76,8 @@ class Listener(threading.Thread):
             self._demodulator.quit()
         if self._configuration.export is True:
             self._exporter.quit()
+        if self._iq_recorder is not None:
+            self._iq_recorder.quit()
         return True
 
     def run(self) -> None:
@@ -76,10 +86,14 @@ class Listener(threading.Thread):
             self._demodulator.start()
         if self._configuration.export is True:
             self._exporter.start()
+        if self._iq_recorder is not None:
+            self._iq_recorder.start()
         self._timer.start()
 
         if self._demodulator_params.demodulation_type == DemodulationType.FM:
             self._demodulator.join()
         if self._configuration.export is True:
             self._exporter.join()
+        if self._iq_recorder is not None:
+            self._iq_recorder.join()
         self._device.join()
