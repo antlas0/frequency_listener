@@ -60,7 +60,8 @@ class Listener(threading.Thread):
         logger.info(f"Listening during {self._configuration.duration_s} seconds.")
 
         self._device.setup()
-        self._iq_recorder.setup()
+        if self._iq_recorder is not None:
+            self._iq_recorder.setup()
 
         if self._demodulator_params.demodulation_type == DemodulationType.FM:
             self._demodulator.setup()
